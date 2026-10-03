@@ -1,0 +1,391 @@
+<div class="real-product-card">
+
+  <!-- Product Image -->
+
+  <div class="real-product-card__image">
+
+    <a href="{{ product.url }}">
+
+      {% if product.featured_image != blank %}
+
+        {{
+          product.featured_image
+          | image_url: width: 600
+          | image_tag: loading: 'lazy'
+        }}
+
+      {% endif %}
+
+    </a>
+
+
+    <!-- Sale Badge -->
+
+    {% if product.compare_at_price > product.price %}
+
+      <span class="real-product-card__sale">
+        SALE
+      </span>
+
+    {% endif %}
+
+
+    <!-- Featured Badge -->
+
+    {% if product.tags contains 'featured' %}
+
+      <span class="real-product-card__featured">
+        FEATURED
+      </span>
+
+    {% endif %}
+
+  </div>
+
+
+  <!-- Product Information -->
+
+  <div class="real-product-card__info">
+
+
+    <!-- Title -->
+
+    <h3>
+
+      <a href="{{ product.url }}">
+        {{ product.title }}
+      </a>
+
+    </h3>
+
+
+    <!-- Price -->
+
+    <div class="real-product-card__price">
+
+      <span class="real-product-card__current-price">
+        {{ product.price | money }}
+      </span>
+
+
+      <!-- Compare At Price -->
+
+      {% if product.compare_at_price > product.price %}
+
+        <span class="real-product-card__compare-price">
+          {{ product.compare_at_price | money }}
+        </span>
+
+      {% endif %}
+
+    </div>
+
+
+    <!-- Availability -->
+
+    {% if product.available %}
+
+      <p class="real-product-card__available">
+        Available
+      </p>
+
+    {% else %}
+
+      <p class="real-product-card__soldout">
+        Sold Out
+      </p>
+
+    {% endif %}
+
+
+    <!-- Product Link -->
+
+    <a
+      href="{{ product.url }}"
+      class="real-product-card__link"
+    >
+      View Product
+    </a>
+
+
+    <!-- Add To Cart -->
+
+    {% if product.available %}
+
+      <form
+        method="post"
+        action="/cart/add"
+        class="real-product-card__form"
+      >
+
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+        >
+
+        <input
+          type="hidden"
+          name="quantity"
+          value="1"
+        >
+
+        <button
+          type="submit"
+          class="real-product-card__button"
+        >
+          Add to Cart
+        </button>
+
+      </form>
+
+    {% endif %}
+
+  </div>
+
+</div>
+
+
+<style>
+
+.real-product-card {
+
+  position: relative;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  border: 1px solid #e5e5e5;
+
+  border-radius: 8px;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+}
+
+
+.real-product-card:hover {
+
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08);
+
+}
+
+
+/* Image */
+
+.real-product-card__image {
+
+  position: relative;
+
+  overflow: hidden;
+
+}
+
+
+.real-product-card__image img {
+
+  width: 100%;
+
+  height: auto;
+
+  display: block;
+
+}
+
+
+/* Badges */
+
+.real-product-card__sale,
+.real-product-card__featured {
+
+  position: absolute;
+
+  top: 12px;
+
+  padding: 6px 10px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  border-radius: 4px;
+
+}
+
+
+.real-product-card__sale {
+
+  left: 12px;
+
+  background: #111;
+
+  color: #fff;
+
+}
+
+
+.real-product-card__featured {
+
+  right: 12px;
+
+  background: #fff;
+
+  color: #111;
+
+  border: 1px solid #ddd;
+
+}
+
+
+/* Information */
+
+.real-product-card__info {
+
+  padding: 20px;
+
+}
+
+
+.real-product-card__info h3 {
+
+  margin: 0 0 10px;
+
+  font-size: 18px;
+
+}
+
+
+.real-product-card__info h3 a {
+
+  color: #111;
+
+  text-decoration: none;
+
+}
+
+
+/* Price */
+
+.real-product-card__price {
+
+  display: flex;
+
+  gap: 10px;
+
+  align-items: center;
+
+  margin-bottom: 10px;
+
+}
+
+
+.real-product-card__current-price {
+
+  font-weight: 700;
+
+  font-size: 17px;
+
+}
+
+
+.real-product-card__compare-price {
+
+  color: #888;
+
+  text-decoration: line-through;
+
+  font-size: 14px;
+
+}
+
+
+/* Availability */
+
+.real-product-card__available {
+
+  color: #237a3b;
+
+  font-size: 13px;
+
+  margin: 8px 0;
+
+}
+
+
+.real-product-card__soldout {
+
+  color: #b42323;
+
+  font-size: 13px;
+
+  margin: 8px 0;
+
+}
+
+
+/* Product Link */
+
+.real-product-card__link {
+
+  display: inline-block;
+
+  margin: 8px 0 15px;
+
+  color: #111;
+
+  text-decoration: underline;
+
+  font-size: 14px;
+
+}
+
+
+/* Add To Cart */
+
+.real-product-card__form {
+
+  margin: 0;
+
+}
+
+
+.real-product-card__button {
+
+  width: 100%;
+
+  padding: 12px 18px;
+
+  border: none;
+
+  border-radius: 4px;
+
+  background: #111;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition: opacity 0.2s ease;
+
+}
+
+
+.real-product-card__button:hover {
+
+  opacity: 0.8;
+
+}
+
+</style>

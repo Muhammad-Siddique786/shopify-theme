@@ -1,0 +1,137 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "margin_bottom": 0,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "two_image_slider_kChjdy": {
+      "type": "two-image-slider",
+      "blocks": {
+        "slide_N4kjDK": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/imgi_137_Azaadi-Banner.webp"
+          }
+        },
+        "slide_tVzYUa": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/imgi_119_Mattress-Topper-Desk_jpg.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "slide_N4kjDK",
+        "slide_tVzYUa"
+      ],
+      "name": "Two Image Slider",
+      "settings": {}
+    },
+    "azadi_bundle_banner_8cYwgz": {
+      "type": "azadi-bundle-banner",
+      "name": "Azadi Bundle Banner",
+      "settings": {
+        "image": "shopify://shop_images/imgi_5_Bundle-Image_cce5638d-dd25-44ae-b8d6-2e2cd73b9df4.png",
+        "small_title": "BUILD YOUR",
+        "heading": "AZAADI BUNDLE",
+        "heading_small": "PK",
+        "description": "Get 9% OFF on your bundle and an extra 5% OFF with advance payment.",
+        "combine_text": "Combine Your Savings",
+        "discount_1_label": "Bundle Discount",
+        "discount_1_value": "9% OFF",
+        "discount_2_label": "Advance Payment",
+        "discount_2_value": "+5% OFF",
+        "discount_3_label": "Total Savings",
+        "discount_3_value": "UP TO 14%",
+        "button_text": "BUILD YOUR BUNDLE",
+        "button_link": ""
+      }
+    },
+    "mystatement_TtYUg8": {
+      "type": "mystatement",
+      "blocks": {
+        "announcement_piFm9c": {
+          "type": "announcement",
+          "settings": {
+            "text": "FREE SHIPPING ON ORDERS OVER RS 19,999",
+            "icon": "🚚",
+            "link": ""
+          }
+        },
+        "announcement_heLFBb": {
+          "type": "announcement",
+          "settings": {
+            "text": "5% EXTRA DISCOUNT ON ADVANCE PAYMENT",
+            "icon": "✓",
+            "link": ""
+          }
+        },
+        "announcement_NcFpzM": {
+          "type": "announcement",
+          "settings": {
+            "text": "PREMIUM QUALITY • COMFORT GUARANTEED",
+            "icon": "★",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_piFm9c",
+        "announcement_heLFBb",
+        "announcement_NcFpzM"
+      ],
+      "name": "Professional Announcement",
+      "settings": {
+        "color_scheme": "",
+        "show_line_separator": true,
+        "marquee_speed": 20,
+        "pause_on_hover": true,
+        "statement_spacing": 60,
+        "mobile_statement_spacing": 35,
+        "separator": "✦",
+        "separator_size": 10,
+        "separator_opacity": 0.7,
+        "text_size": 13,
+        "mobile_text_size": 11,
+        "text_weight": "600",
+        "text_transform": "uppercase",
+        "letter_spacing": 0.7,
+        "bar_height": 42,
+        "mobile_bar_height": 38,
+        "icon_size": 17,
+        "mobile_icon_size": 15
+      }
+    }
+  },
+  "order": [
+    "mystatement_TtYUg8",
+    "header",
+    "two_image_slider_kChjdy",
+    "azadi_bundle_banner_8cYwgz"
+  ]
+}

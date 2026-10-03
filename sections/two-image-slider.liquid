@@ -1,0 +1,167 @@
+<div id="TwoImageSlider-{{ section.id }}" class="two-image-slider">
+
+  <div class="two-image-slider__slides">
+    {% for block in section.blocks %}
+      <div class="two-image-slider__slide {% if forloop.first %}active{% endif %}">
+        {% if block.settings.image != blank %}
+          {{
+            block.settings.image
+            | image_url: width: 2000
+            | image_tag:
+              loading: 'lazy',
+              class: 'two-image-slider__image'
+          }}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="two-image-slider__dots">
+    {% for block in section.blocks %}
+      <button
+        type="button"
+        class="two-image-slider__dot {% if forloop.first %}active{% endif %}"
+        data-slide="{{ forloop.index0 }}"
+        aria-label="Slide {{ forloop.index }}"
+      ></button>
+    {% endfor %}
+  </div>
+
+</div>
+
+<style>
+  #TwoImageSlider-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  #TwoImageSlider-{{ section.id }} .two-image-slider__slides {
+    width: 100%;
+  }
+
+  #TwoImageSlider-{{ section.id }} .two-image-slider__slide {
+    display: none;
+    width: 100%;
+  }
+
+  #TwoImageSlider-{{ section.id }} .two-image-slider__slide.active {
+    display: block;
+  }
+
+  #TwoImageSlider-{{ section.id }} .two-image-slider__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  #TwoImageSlider-{{ section.id }} .two-image-slider__dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  #TwoImageSlider-{{ section.id }} .two-image-slider__dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: 1px solid #ffffff;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  #TwoImageSlider-{{ section.id }} .two-image-slider__dot.active {
+    background: #ffffff;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const slider = document.getElementById(
+      'TwoImageSlider-{{ section.id }}'
+    );
+
+    if (!slider) return;
+
+    const slides = slider.querySelectorAll(
+      '.two-image-slider__slide'
+    );
+
+    const dots = slider.querySelectorAll(
+      '.two-image-slider__dot'
+    );
+
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('active', i === index);
+      });
+
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle('active', i === index);
+      });
+
+      currentSlide = index;
+    }
+
+    // Dot click
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        const index = Number(this.dataset.slide);
+        showSlide(index);
+      });
+    });
+
+    // Auto change every 3 seconds
+    setInterval(function () {
+      currentSlide++;
+
+      if (currentSlide >= slides.length) {
+        currentSlide = 0;
+      }
+
+      showSlide(currentSlide);
+    }, 3000);
+
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Two Image Slider",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Two Image Slider",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 2
+}
+{% endschema %}

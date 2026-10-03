@@ -1,0 +1,113 @@
+{% assign product = section.settings['liquid-practice'] %}
+
+{% if product != blank %}
+  <section class="liquid-practice">
+    <div class="liquid-practice__container">
+      <!-- Product Image -->
+      <div class="liquid-practice__media">
+        {% if product.featured_image != blank %}
+          <a
+            href="{{ product.url }}"
+            class="liquid-practice__image-link"
+          >
+            {{
+              product.featured_image
+              | image_url: width: 1000
+              | image_tag:
+                loading: 'lazy',
+                widths: '400, 600, 800, 1000',
+                sizes: '(max-width: 749px) 100vw, 50vw',
+                alt: product.title
+            }}
+          </a>
+
+        {% else %}
+          <div class="liquid-practice__placeholder">No Product Image</div>
+        {% endif %}
+      </div>
+
+      <!-- Product Content -->
+      <div class="liquid-practice__content">
+        <span class="liquid-practice__eyebrow"> FEATURED PRODUCT </span>
+        {% if product.tags contains 'featured' %}
+          <span class="product-featured-badge"> FEATURED </span>
+        {% endif %}
+
+        <!-- Title -->
+        <h2 class="liquid-practice__title">
+          {{ product.title }}
+        </h2>
+
+        <!-- Vendor -->
+        {% if product.vendor != blank %}
+          <p class="liquid-practice__vendor">
+            Brand: <strong>{{ product.vendor }}</strong>
+          </p>
+        {% endif %}
+
+        <!-- Price -->
+        <div class="liquid-practice__price">
+          {{ product.price | money }}
+        </div>
+
+        <!-- Description -->
+        {% if product.description != blank %}
+          <div class="liquid-practice__description">
+            {{ product.description }}
+          </div>
+        {% endif %}
+
+        <!-- Product Tags -->
+        {% if product.tags != blank %}
+          <div class="liquid-practice__tags">
+            <h3>Product Tags</h3>
+
+            <div class="liquid-practice__tag-list">
+              {% for tag in product.tags %}
+                {% render 'product-tag', tag: tag %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Button -->
+        <a
+          href="{{ product.url }}"
+          class="liquid-practice__button"
+        >
+          View Product
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+{% else %}
+  <section class="liquid-practice">
+    <div class="liquid-practice__empty">
+      <h2>Select a Product</h2>
+
+      <p>Please select a product from the Theme Editor.</p>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Liquid Practice",
+
+  "settings": [
+    {
+      "type": "product",
+      "id": "liquid-practice",
+      "label": "Select product"
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Liquid Practice"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,489 @@
+{% doc %}
+  @prompt
+    Create a reusable Shopify theme block for the existing Multimedia collage section. On desktop, keep the left-side image visually sticky while the visitor scrolls through the product cards or product column on the right. The right side should have a controlled independent scrolling experience, and when the collage section ends, the sticky image should release and continue upward with the page. Preserve the existing collage design, responsive behavior, product links, accessibility, and normal scrolling on mobile. Include settings so the merchant can enable or disable the sticky behavior and adjust the right-column scroll height., ma chahata hon ka ak collection ki products hon jo wo coleection add krny sa khud hi a jaiy or dosra image ka agy 2 colums mai a rhi hon products, image ka size collection products ki 2 rows ka equal aya or product ki rating bhi add kro
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sticky-collage-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    position: relative;
+  }
+
+  .ai-sticky-collage-wrapper-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    position: relative;
+  }
+
+  .ai-sticky-collage-left-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-sticky-collage-left-inner-{{ ai_gen_id }} {
+    position: sticky;
+    top: {{ block.settings.sticky_offset }}px;
+    height: fit-content;
+  }
+
+  .ai-sticky-collage-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: {{ settings.media_radius }}px;
+  }
+
+  .ai-sticky-collage-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .ai-sticky-collage-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: {{ settings.media_radius }}px;
+  }
+
+  .ai-sticky-collage-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-sticky-collage-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-sticky-collage-right-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    min-height: {{ block.settings.right_column_height }}px;
+  }
+
+  .ai-sticky-collage-product-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background-color: {{ block.settings.product_card_bg }};
+    border-radius: {{ settings.card_corner_radius }}px;
+    text-decoration: none;
+    color: {{ block.settings.product_card_text }};
+    transition: transform 0.3s ease;
+    height: fit-content;
+  }
+
+  .ai-sticky-collage-product-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+  }
+
+  .ai-sticky-collage-product-image-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: {{ settings.media_radius }}px;
+  }
+
+  .ai-sticky-collage-product-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-sticky-collage-product-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-sticky-collage-product-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-sticky-collage-product-info-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-sticky-collage-product-title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .ai-sticky-collage-product-rating-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .ai-sticky-collage-stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ai-sticky-collage-star-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    fill: {{ block.settings.star_color }};
+  }
+
+  .ai-sticky-collage-star-empty-{{ ai_gen_id }} {
+    fill: {{ block.settings.star_empty_color }};
+  }
+
+  .ai-sticky-collage-rating-count-{{ ai_gen_id }} {
+    color: {{ block.settings.product_card_text }};
+    opacity: 0.7;
+    font-size: 13px;
+  }
+
+  .ai-sticky-collage-product-price-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .ai-sticky-collage-product-empty-{{ ai_gen_id }} {
+    grid-column: 1 / -1;
+    padding: 40px 16px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border-radius: {{ settings.card_corner_radius }}px;
+    color: #666;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-sticky-collage-wrapper-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .ai-sticky-collage-left-inner-{{ ai_gen_id }} {
+      position: static;
+    }
+
+    .ai-sticky-collage-right-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+  }
+{% endstyle %}
+
+<sticky-collage-{{ ai_gen_id }}
+  class="ai-sticky-collage-{{ ai_gen_id }}"
+  data-sticky-enabled="{{ block.settings.enable_sticky }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-sticky-collage-wrapper-{{ ai_gen_id }}">
+    <div class="ai-sticky-collage-left-{{ ai_gen_id }}">
+      <div class="ai-sticky-collage-left-inner-{{ ai_gen_id }}">
+        {% if block.settings.main_image %}
+          <div class="ai-sticky-collage-image-wrapper-{{ ai_gen_id }}" data-image-height-match>
+            <img
+              src="{{ block.settings.main_image | image_url: width: 1200 }}"
+              alt="{{ block.settings.main_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.main_image.width }}"
+              height="{{ block.settings.main_image.height }}"
+              class="ai-sticky-collage-image-{{ ai_gen_id }}"
+            >
+          </div>
+        {% else %}
+          <div class="ai-sticky-collage-image-placeholder-{{ ai_gen_id }}" data-image-height-match style="min-height: 600px;">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-sticky-collage-empty-state-{{ ai_gen_id }}">
+              Add a main image
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ai-sticky-collage-right-{{ ai_gen_id }}" data-products-grid>
+      {% if block.settings.collection != blank %}
+        {% assign products_limit = block.settings.products_limit %}
+        {% for product in block.settings.collection.products limit: products_limit %}
+          <a
+            href="{{ product.url }}"
+            class="ai-sticky-collage-product-{{ ai_gen_id }}"
+            aria-label="View {{ product.title }}"
+          >
+            <div class="ai-sticky-collage-product-image-{{ ai_gen_id }}">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 600 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  loading="lazy"
+                  width="600"
+                  height="600"
+                >
+              {% else %}
+                <div class="ai-sticky-collage-product-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="ai-sticky-collage-product-info-{{ ai_gen_id }}">
+              <h3 class="ai-sticky-collage-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+              
+              {% if block.settings.show_rating %}
+                <div class="ai-sticky-collage-product-rating-{{ ai_gen_id }}">
+                  <div class="ai-sticky-collage-stars-{{ ai_gen_id }}">
+                    {% assign rating = product.metafields.reviews.rating.value | default: 4.5 %}
+                    {% assign rating_whole = rating | floor %}
+                    {% for i in (1..5) %}
+                      {% if i <= rating_whole %}
+                        <svg class="ai-sticky-collage-star-{{ ai_gen_id }}" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                        </svg>
+                      {% else %}
+                        <svg class="ai-sticky-collage-star-{{ ai_gen_id }} ai-sticky-collage-star-empty-{{ ai_gen_id }}" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                        </svg>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <span class="ai-sticky-collage-rating-count-{{ ai_gen_id }}">
+                    ({{ product.metafields.reviews.rating_count.value | default: 0 }})
+                  </span>
+                </div>
+              {% endif %}
+
+              <div class="ai-sticky-collage-product-price-{{ ai_gen_id }}">
+                {{ product.price | money }}
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        <div class="ai-sticky-collage-product-empty-{{ ai_gen_id }}">
+          Select a collection to display products
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</sticky-collage-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class StickyCollage{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.stickyEnabled = this.dataset.stickyEnabled === 'true';
+      }
+
+      connectedCallback() {
+        if (!this.stickyEnabled) {
+          this.disableSticky();
+        }
+
+        this.matchImageHeight();
+        window.addEventListener('resize', this.handleResize.bind(this));
+        this.handleResize();
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('resize', this.handleResize.bind(this));
+      }
+
+      matchImageHeight() {
+        const imageWrapper = this.querySelector('[data-image-height-match]');
+        const productsGrid = this.querySelector('[data-products-grid]');
+        
+        if (!imageWrapper || !productsGrid) return;
+
+        const updateHeight = () => {
+          if (window.innerWidth > 749) {
+            const products = productsGrid.querySelectorAll('.ai-sticky-collage-product-{{ ai_gen_id }}');
+            if (products.length >= 2) {
+              const firstProduct = products[0];
+              const secondProduct = products[1];
+              const totalHeight = firstProduct.offsetHeight + secondProduct.offsetHeight + 20;
+              imageWrapper.style.height = totalHeight + 'px';
+            }
+          } else {
+            imageWrapper.style.height = 'auto';
+          }
+        };
+
+        setTimeout(updateHeight, 100);
+        window.addEventListener('load', updateHeight);
+      }
+
+      handleResize() {
+        const isMobile = window.innerWidth <= 749;
+        
+        if (isMobile) {
+          this.disableSticky();
+        } else if (this.stickyEnabled) {
+          this.enableSticky();
+        }
+
+        this.matchImageHeight();
+      }
+
+      disableSticky() {
+        const leftInner = this.querySelector('.ai-sticky-collage-left-inner-{{ ai_gen_id }}');
+        if (leftInner) {
+          leftInner.style.position = 'static';
+        }
+      }
+
+      enableSticky() {
+        const leftInner = this.querySelector('.ai-sticky-collage-left-inner-{{ ai_gen_id }}');
+        if (leftInner) {
+          leftInner.style.position = 'sticky';
+        }
+      }
+    }
+
+    customElements.define('sticky-collage-{{ ai_gen_id }}', StickyCollage{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sticky scroll collage",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable sticky behavior",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "sticky_offset",
+      "label": "Sticky offset from top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "right_column_height",
+      "label": "Right column scroll height",
+      "min": 600,
+      "max": 2400,
+      "step": 100,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Number of products",
+      "min": 2,
+      "max": 20,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Product rating"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show product rating",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#ffa500"
+    },
+    {
+      "type": "color",
+      "id": "star_empty_color",
+      "label": "Empty star color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Product cards style"
+    },
+    {
+      "type": "color",
+      "id": "product_card_bg",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "product_card_text",
+      "label": "Text color",
+      "default": "#121212"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky scroll collage"
+    }
+  ]
+}
+{% endschema %}

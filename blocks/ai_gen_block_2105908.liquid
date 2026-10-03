@@ -1,0 +1,588 @@
+{% doc %}
+  @prompt
+    Create a collection showcase section where all collection images are displayed in a uniform, large size. All images should have the same fixed height and width (equal/consistent sizing), displayed in a grid layout. Images should be large and visually prominent, with consistent aspect ratio enforced so no image looks different in size from others., sirf 3 hi colection hon , bottom corner mai ak chota circle ho jis mai arrow bna hoa ho or mai osma collection ki product ka link rakhon or headin ko tora mota kro or oska nichy ak subheading bhi ak kro 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-showcase-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+  }
+
+  .ai-collection-showcase-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-collection-showcase-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.heading_alignment }};
+    margin: 0 0 {{ block.settings.heading_spacing }}px;
+  }
+
+  .ai-collection-showcase-heading-{{ ai_gen_id }} {
+    margin: 0 0 10px;
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    font-weight: 700;
+  }
+
+  .ai-collection-showcase-subheading-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    font-weight: 400;
+  }
+
+  .ai-collection-showcase-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-collection-showcase-item-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-collection-showcase-link-{{ ai_gen_id }} {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-collection-showcase-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-collection-showcase-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-collection-showcase-link-{{ ai_gen_id }}:hover .ai-collection-showcase-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-collection-showcase-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-collection-showcase-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-collection-showcase-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, {{ block.settings.overlay_opacity }}), transparent);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .ai-collection-showcase-title-{{ ai_gen_id }} {
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 5px;
+    font-weight: 600;
+  }
+
+  .ai-collection-showcase-count-{{ ai_gen_id }} {
+    color: {{ block.settings.count_color }};
+    font-size: {{ block.settings.count_size }}px;
+    margin: 0;
+  }
+
+  .ai-collection-showcase-arrow-button-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: {{ block.settings.arrow_button_offset }}px;
+    right: {{ block.settings.arrow_button_offset }}px;
+    width: {{ block.settings.arrow_button_size }}px;
+    height: {{ block.settings.arrow_button_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.arrow_button_bg }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    z-index: 2;
+  }
+
+  .ai-collection-showcase-link-{{ ai_gen_id }}:hover .ai-collection-showcase-arrow-button-{{ ai_gen_id }} {
+    transform: scale(1.1);
+    background-color: {{ block.settings.arrow_button_hover_bg }};
+  }
+
+  .ai-collection-showcase-arrow-button-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+    stroke: {{ block.settings.arrow_button_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-collection-showcase-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_tablet }}, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collection-showcase-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+
+    .ai-collection-showcase-image-wrapper-{{ ai_gen_id }} {
+      height: {{ block.settings.image_height_mobile }}px;
+    }
+
+    .ai-collection-showcase-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-collection-showcase-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<collection-showcase-{{ ai_gen_id }} class="ai-collection-showcase-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-collection-showcase-container-{{ ai_gen_id }}">
+    <div class="ai-collection-showcase-header-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-collection-showcase-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+      {% if block.settings.subheading != blank %}
+        <p class="ai-collection-showcase-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ai-collection-showcase-grid-{{ ai_gen_id }}">
+      {% if block.settings.collections != blank %}
+        {% for collection in block.settings.collections %}
+          <div class="ai-collection-showcase-item-{{ ai_gen_id }}">
+            <a href="{{ collection.url }}" class="ai-collection-showcase-link-{{ ai_gen_id }}">
+              <div class="ai-collection-showcase-image-wrapper-{{ ai_gen_id }}">
+                {% if collection.image %}
+                  <img
+                    src="{{ collection.image | image_url: width: 1000 }}"
+                    alt="{{ collection.image.alt | escape }}"
+                    loading="lazy"
+                    width="1000"
+                    height="{{ block.settings.image_height }}"
+                    class="ai-collection-showcase-image-{{ ai_gen_id }}"
+                  >
+                {% elsif collection.products.first and collection.products.first.featured_image %}
+                  <img
+                    src="{{ collection.products.first.featured_image | image_url: width: 1000 }}"
+                    alt="{{ collection.products.first.featured_image.alt | escape }}"
+                    loading="lazy"
+                    width="1000"
+                    height="{{ block.settings.image_height }}"
+                    class="ai-collection-showcase-image-{{ ai_gen_id }}"
+                  >
+                {% else %}
+                  <div class="ai-collection-showcase-placeholder-{{ ai_gen_id }}">
+                    {{ 'collection-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.show_overlay %}
+                  <div class="ai-collection-showcase-overlay-{{ ai_gen_id }}">
+                    <h3 class="ai-collection-showcase-title-{{ ai_gen_id }}">{{ collection.title }}</h3>
+                    {% if block.settings.show_product_count %}
+                      <p class="ai-collection-showcase-count-{{ ai_gen_id }}">
+                        {{ collection.products_count }}
+                        {% if collection.products_count == 1 %}
+                          product
+                        {% else %}
+                          products
+                        {% endif %}
+                      </p>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.show_arrow_button %}
+                  <div class="ai-collection-showcase-arrow-button-{{ ai_gen_id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+                {% endif %}
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..3) %}
+          <div class="ai-collection-showcase-item-{{ ai_gen_id }}">
+            <div class="ai-collection-showcase-image-wrapper-{{ ai_gen_id }}">
+              <div class="ai-collection-showcase-placeholder-{{ ai_gen_id }}">
+                {{ 'collection-1' | placeholder_svg_tag }}
+              </div>
+              {% if block.settings.show_overlay %}
+                <div class="ai-collection-showcase-overlay-{{ ai_gen_id }}">
+                  <h3 class="ai-collection-showcase-title-{{ ai_gen_id }}">Collection {{ i }}</h3>
+                  {% if block.settings.show_product_count %}
+                    <p class="ai-collection-showcase-count-{{ ai_gen_id }}">0 products</p>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings.show_arrow_button %}
+                <div class="ai-collection-showcase-arrow-button-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</collection-showcase-{{ ai_gen_id }}>
+
+{% schema %}
+{
+  "name": "Collection showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collections"
+    },
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Collections",
+      "limit": 3
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by collection"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#121212"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Explore our curated collections"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Heading spacing",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on tablet",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Image height on desktop",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "min": 150,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Image height on mobile",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show overlay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Overlay opacity",
+      "default": 0.6
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Show product count",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "count_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Count size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "count_color",
+      "label": "Count color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Arrow button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow_button",
+      "label": "Show arrow button",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "arrow_button_size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Button size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "arrow_button_offset",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Button offset",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "arrow_button_bg",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_button_hover_bg",
+      "label": "Button hover background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "arrow_button_color",
+      "label": "Arrow color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection showcase"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

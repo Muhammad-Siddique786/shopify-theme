@@ -1,0 +1,658 @@
+{{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign social_icons = true
+
+  if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
+    assign social_icons = false
+  endif
+-%}
+
+{% if social_icons %}
+  {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+<style>
+  /* =========================================
+     PROFESSIONAL ANNOUNCEMENT BAR
+  ========================================= */
+
+  .professional-announcement-{{ section.id }} {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+
+    {% if section.settings.show_line_separator %}
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    {% endif %}
+  }
+
+
+  /* MAIN MARQUEE */
+
+  .professional-announcement-{{ section.id }}
+  .announcement-marquee {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+  }
+
+
+  /* TRACK */
+
+  .professional-announcement-{{ section.id }}
+  .announcement-marquee__track {
+
+    display: flex;
+    width: max-content;
+
+    animation:
+      announcement-scroll-{{ section.id }}
+      {{ section.settings.marquee_speed }}s
+      linear
+      infinite;
+
+    will-change: transform;
+  }
+
+
+  /* GROUP */
+
+  .professional-announcement-{{ section.id }}
+  .announcement-marquee__group {
+
+    display: flex;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    gap: {{ section.settings.statement_spacing }}px;
+
+    padding-right: {{ section.settings.statement_spacing }}px;
+  }
+
+
+  /* STATEMENT */
+
+  .professional-announcement-{{ section.id }}
+  .announcement-item {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+
+    min-height: {{ section.settings.bar_height }}px;
+
+    padding: 0 5px;
+
+    color: rgb(var(--color-foreground));
+
+    text-decoration: none;
+
+    font-size: {{ section.settings.text_size }}px;
+
+    font-weight: {{ section.settings.text_weight }};
+
+    letter-spacing: {{ section.settings.letter_spacing }}px;
+
+    line-height: 1.2;
+
+    text-transform: {{ section.settings.text_transform }};
+
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+
+  /* HOVER */
+
+  .professional-announcement-{{ section.id }}
+  .announcement-item:hover {
+
+    opacity: 0.75;
+
+  }
+
+
+  /* ICON */
+
+  .professional-announcement-{{ section.id }}
+  .announcement-icon {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+
+    flex-shrink: 0;
+
+    font-size: {{ section.settings.icon_size }}px;
+
+    line-height: 1;
+  }
+
+
+  /* SEPARATOR */
+
+  .professional-announcement-{{ section.id }}
+  .announcement-separator {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: {{ section.settings.separator_size }}px;
+    height: {{ section.settings.separator_size }}px;
+
+    font-size: {{ section.settings.separator_size }}px;
+
+    opacity: {{ section.settings.separator_opacity }};
+
+  }
+
+
+  /* PAUSE */
+
+  {% if section.settings.pause_on_hover %}
+
+    .professional-announcement-{{ section.id }}
+    .announcement-marquee:hover
+    .announcement-marquee__track {
+
+      animation-play-state: paused;
+
+    }
+
+  {% endif %}
+
+
+  /* =========================================
+     SEAMLESS RIGHT → LEFT ANIMATION
+  ========================================= */
+
+  @keyframes announcement-scroll-{{ section.id }} {
+
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+
+  }
+
+
+  /* =========================================
+     MOBILE
+  ========================================= */
+
+  @media screen and (max-width: 749px) {
+
+    .professional-announcement-{{ section.id }}
+    .announcement-item {
+
+      min-height: {{ section.settings.mobile_bar_height }}px;
+
+      font-size: {{ section.settings.mobile_text_size }}px;
+
+      gap: 7px;
+
+      letter-spacing: 0.4px;
+
+    }
+
+
+    .professional-announcement-{{ section.id }}
+    .announcement-marquee__group {
+
+      gap: {{ section.settings.mobile_statement_spacing }}px;
+
+      padding-right: {{ section.settings.mobile_statement_spacing }}px;
+
+    }
+
+
+    .professional-announcement-{{ section.id }}
+    .announcement-icon {
+
+      width: {{ section.settings.mobile_icon_size }}px;
+
+      height: {{ section.settings.mobile_icon_size }}px;
+
+      font-size: {{ section.settings.mobile_icon_size }}px;
+
+    }
+
+  }
+</style>
+
+<div
+  class="professional-announcement-{{ section.id }} color-{{ section.settings.color_scheme }} gradient"
+>
+  <div class="announcement-marquee">
+    <div class="announcement-marquee__track">
+      <!--
+        =====================================
+             GROUP 1
+        ======================================
+      -->
+
+      <div class="announcement-marquee__group">
+        {% for block in section.blocks %}
+          {% if block.settings.text != blank %}
+            {% if block.settings.link != blank %}
+              <a
+                href="{{ block.settings.link }}"
+                class="announcement-item"
+                {{ block.shopify_attributes }}
+              >
+            {% else %}
+              <div
+                class="announcement-item"
+                {{ block.shopify_attributes }}
+              >
+            {% endif %}
+
+            {% if block.settings.icon != blank %}
+              <span class="announcement-icon">
+                {{ block.settings.icon }}
+              </span>
+            {% endif %}
+
+            <span>
+              {{ block.settings.text | escape }}
+            </span>
+
+            {% if block.settings.link != blank %}
+              <span class="announcement-arrow"> → </span>
+            {% endif %}
+
+            {% if block.settings.link != blank %}
+              </a>
+
+            {% else %}
+              </div>
+            {% endif %}
+
+            {% unless forloop.last %}
+              <span
+                class="announcement-separator"
+                aria-hidden="true"
+              >
+                {{ section.settings.separator }}
+              </span>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!--
+        =====================================
+             GROUP 2
+             Duplicate for seamless loop
+        ======================================
+      -->
+
+      <div
+        class="announcement-marquee__group"
+        aria-hidden="true"
+      >
+        {% for block in section.blocks %}
+          {% if block.settings.text != blank %}
+            <span class="announcement-item">
+              {% if block.settings.icon != blank %}
+                <span class="announcement-icon">
+                  {{ block.settings.icon }}
+                </span>
+              {% endif %}
+
+              <span>
+                {{ block.settings.text | escape }}
+              </span>
+
+              {% if block.settings.link != blank %}
+                <span class="announcement-arrow"> → </span>
+              {% endif %}
+            </span>
+
+            {% unless forloop.last %}
+              <span
+                class="announcement-separator"
+                aria-hidden="true"
+              >
+                {{ section.settings.separator }}
+              </span>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Professional Announcement",
+  "max_blocks": 12,
+
+  "class": "announcement-bar-section",
+
+  "enabled_on": {
+    "groups": ["header"]
+  },
+
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement Design"
+    },
+
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_line_separator",
+      "label": "Show bottom border",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Marquee Animation"
+    },
+
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "unit": "s",
+      "label": "Scrolling speed",
+      "default": 20,
+      "info": "Lower value = faster scrolling"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Statement Spacing"
+    },
+
+    {
+      "type": "range",
+      "id": "statement_spacing",
+      "min": 10,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop statement spacing",
+      "default": 60
+    },
+
+    {
+      "type": "range",
+      "id": "mobile_statement_spacing",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile statement spacing",
+      "default": 35
+    },
+
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator",
+      "default": "✦"
+    },
+
+    {
+      "type": "range",
+      "id": "separator_size",
+      "min": 6,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Separator size",
+      "default": 10
+    },
+
+    {
+      "type": "range",
+      "id": "separator_opacity",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.1,
+      "label": "Separator opacity",
+      "default": 0.7
+    },
+
+    {
+      "type": "header",
+      "content": "Text Settings"
+    },
+
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop text size",
+      "default": 13
+    },
+
+    {
+      "type": "range",
+      "id": "mobile_text_size",
+      "min": 9,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile text size",
+      "default": 11
+    },
+
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text format",
+      "options": [
+        {
+          "value": "none",
+          "label": "Normal"
+        },
+        {
+          "value": "uppercase",
+          "label": "UPPERCASE"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0.7
+    },
+
+    {
+      "type": "header",
+      "content": "Bar Height"
+    },
+
+    {
+      "type": "range",
+      "id": "bar_height",
+      "min": 25,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop bar height",
+      "default": 42
+    },
+
+    {
+      "type": "range",
+      "id": "mobile_bar_height",
+      "min": 25,
+      "max": 70,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile bar height",
+      "default": 38
+    },
+
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop icon size",
+      "default": 17
+    },
+
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 10,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile icon size",
+      "default": 15
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "announcement",
+
+      "name": "Announcement",
+
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "FREE SHIPPING ON ORDERS OVER RS 19,999",
+          "label": "Announcement text"
+        },
+
+        {
+          "type": "text",
+          "id": "icon",
+          "default": "🚚",
+          "label": "Icon"
+        },
+
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Announcement link"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Professional Announcement",
+
+      "blocks": [
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "FREE SHIPPING ON ORDERS OVER RS 19,999",
+            "icon": "🚚"
+          }
+        },
+
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "5% EXTRA DISCOUNT ON ADVANCE PAYMENT",
+            "icon": "✓"
+          }
+        },
+
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "PREMIUM QUALITY • COMFORT GUARANTEED",
+            "icon": "★"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

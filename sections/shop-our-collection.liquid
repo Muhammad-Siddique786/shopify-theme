@@ -1,0 +1,405 @@
+<section class="shop-collection-section">
+
+  {% if section.settings.collection != blank %}
+
+    <div class="shop-collection">
+
+      <!-- Collection Image -->
+      <div class="shop-collection-image">
+
+        {% if section.settings.collection.image != blank %}
+
+          {{ section.settings.collection.image
+            | image_url: width: 1200
+            | image_tag:
+              loading: 'lazy',
+              widths: '400, 600, 800, 1000, 1200',
+              sizes: '(max-width: 749px) 100vw, 50vw',
+              alt: section.settings.collection.title
+          }}
+
+        {% else %}
+
+          <div class="shop-collection-placeholder">
+            Collection Image
+          </div>
+
+        {% endif %}
+
+        <div class="shop-collection-overlay"></div>
+
+      </div>
+
+
+      <!-- Collection Content -->
+      <div class="shop-collection-content">
+
+        <span class="shop-collection-label">
+          EXPLORE OUR COLLECTION
+        </span>
+
+        <h2>
+          {{ section.settings.collection.title }}
+        </h2>
+
+        <div class="shop-collection-line"></div>
+
+        <p>
+          Discover carefully selected products designed to bring
+          comfort, quality, and style to your everyday life.
+        </p>
+
+        <a
+          href="{{ section.settings.collection.url }}"
+          class="shop-collection-button"
+        >
+          <span>Shop Collection</span>
+          <span class="shop-collection-arrow">→</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  {% else %}
+
+    <div class="shop-collection-empty">
+      <p>Please select a collection from the Theme Editor.</p>
+    </div>
+
+  {% endif %}
+
+</section>
+
+
+<style>
+
+  /* =========================
+     MAIN SECTION
+  ========================= */
+
+  .shop-collection-section {
+    width: 100%;
+    background: #f8f8f6;
+  }
+
+
+  /* =========================
+     MAIN LAYOUT
+  ========================= */
+
+  .shop-collection {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 80px 30px;
+
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 70px;
+
+    align-items: center;
+  }
+
+
+  /* =========================
+     IMAGE
+  ========================= */
+
+  .shop-collection-image {
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    aspect-ratio: 4 / 3;
+
+    background: #e9e9e7;
+  }
+
+  .shop-collection-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    display: block;
+
+    transition:
+      transform 0.7s ease;
+  }
+
+  .shop-collection-image:hover img {
+    transform: scale(1.05);
+  }
+
+
+  /* Image overlay */
+
+  .shop-collection-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 55%,
+      rgba(0, 0, 0, 0.12) 100%
+    );
+
+    pointer-events: none;
+  }
+
+
+  /* Placeholder */
+
+  .shop-collection-placeholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #777;
+    font-size: 15px;
+  }
+
+
+  /* =========================
+     CONTENT
+  ========================= */
+
+  .shop-collection-content {
+    padding: 20px 10px;
+  }
+
+
+  /* Small label */
+
+  .shop-collection-label {
+    display: block;
+
+    margin-bottom: 18px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 2.5px;
+
+    color: #777;
+  }
+
+
+  /* Heading */
+
+  .shop-collection-content h2 {
+    margin: 0;
+
+    max-width: 520px;
+
+    font-size: 48px;
+    line-height: 1.08;
+
+    font-weight: 600;
+
+    letter-spacing: -1px;
+
+    color: #171717;
+  }
+
+
+  /* Small line */
+
+  .shop-collection-line {
+    width: 55px;
+    height: 2px;
+
+    margin: 25px 0;
+
+    background: #171717;
+  }
+
+
+  /* Description */
+
+  .shop-collection-content p {
+    max-width: 500px;
+
+    margin: 0 0 30px;
+
+    font-size: 16px;
+    line-height: 1.8;
+
+    color: #666;
+  }
+
+
+  /* =========================
+     BUTTON
+  ========================= */
+
+  .shop-collection-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    padding: 15px 24px;
+
+    background: #171717;
+    color: #fff;
+
+    border-radius: 50px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+      background 0.3s ease,
+      transform 0.3s ease,
+      gap 0.3s ease;
+  }
+
+
+  .shop-collection-button:hover {
+    background: #333;
+
+    transform: translateY(-3px);
+
+    gap: 20px;
+  }
+
+
+  .shop-collection-arrow {
+    font-size: 18px;
+
+    line-height: 1;
+  }
+
+
+  /* =========================
+     EMPTY STATE
+  ========================= */
+
+  .shop-collection-empty {
+    padding: 80px 20px;
+
+    text-align: center;
+
+    color: #777;
+  }
+
+
+  /* =========================
+     TABLET
+  ========================= */
+
+  @media screen and (max-width: 989px) {
+
+    .shop-collection {
+      grid-template-columns: 1fr 1fr;
+
+      gap: 35px;
+
+      padding: 60px 25px;
+    }
+
+    .shop-collection-content h2 {
+      font-size: 38px;
+    }
+
+  }
+
+
+  /* =========================
+     MOBILE
+  ========================= */
+
+  @media screen and (max-width: 749px) {
+
+    .shop-collection {
+      grid-template-columns: 1fr;
+
+      gap: 35px;
+
+      padding: 50px 20px;
+    }
+
+
+    .shop-collection-image {
+      aspect-ratio: 4 / 3;
+
+      border-radius: 18px;
+    }
+
+
+    .shop-collection-content {
+      padding: 0;
+    }
+
+
+    .shop-collection-label {
+      margin-bottom: 14px;
+
+      font-size: 10px;
+
+      letter-spacing: 2px;
+    }
+
+
+    .shop-collection-content h2 {
+      font-size: 34px;
+
+      letter-spacing: -0.5px;
+    }
+
+
+    .shop-collection-line {
+      margin: 20px 0;
+    }
+
+
+    .shop-collection-content p {
+      font-size: 15px;
+
+      line-height: 1.7;
+
+      margin-bottom: 25px;
+    }
+
+
+    .shop-collection-button {
+      width: auto;
+
+      padding: 14px 22px;
+    }
+
+  }
+
+</style>
+
+
+{% schema %}
+
+{
+  "name": "Shop Our Collection",
+
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select collection"
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Shop Our Collection"
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,88 @@
+<section class="best-products-section">
+
+  {% if section.settings.ourbestproducts != blank %}
+
+    <div class="best-products">
+
+      {% for product in section.settings.ourbestproducts.products %}
+
+        {% render 'product-card', product: product %}
+
+      {% endfor %}
+
+    </div>
+
+  {% else %}
+
+    <p>Please select a collection.</p>
+
+  {% endif %}
+
+</section>
+
+
+<style>
+
+.best-products-section {
+  padding: 50px 20px;
+}
+
+.best-products {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+
+/* Tablet */
+
+@media screen and (max-width: 989px) {
+
+  .best-products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+/* Mobile */
+
+@media screen and (max-width: 749px) {
+
+  .best-products {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+</style>
+
+
+{% schema %}
+
+{
+  "name": "Our Best Products",
+
+  "settings": [
+
+    {
+      "type": "collection",
+      "id": "ourbestproducts",
+      "label": "Select Your Best Products"
+    }
+
+  ],
+
+  "presets": [
+
+    {
+      "name": "Our Best Products"
+    }
+
+  ]
+}
+
+{% endschema %}
